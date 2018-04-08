@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1027793008389",
+    "firebase_url": "https://singreading.firebaseio.com",
+    "project_id": "singreading",
+    "storage_bucket": "singreading.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027793008389:android:fb24503ce412b644",
+        "android_client_info": {
+          "package_name": "com.singreading"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027793008389-emkhco4a2ff0qjiueft3h9qpcs1ksulh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.singreading",
+            "certificate_hash": "a1ebed2143536aeae81790b94bcec253d58e3f43"
+          }
+        },
+        {
+          "client_id": "1027793008389-h4j5ks96a36fsojepntdpv5ctjen51en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABNUUdo3xzWJ3u9oyBRN1R8WnJ1H6VtsY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027793008389-h4j5ks96a36fsojepntdpv5ctjen51en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
