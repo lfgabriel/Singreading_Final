@@ -97,8 +97,6 @@ public final class NetworkUtils {
 
     public static String getLyricFromJson(Context context, String lyricJsonStr) throws JSONException {
 
-        Log.e("netutil", "oioi");
-
         final String LYRIC = "lyric";
         final String ERROR = "err";
 
@@ -107,7 +105,6 @@ public final class NetworkUtils {
 
         JSONObject lyricJson = new JSONObject(lyricJsonStr);
         error = lyricJson.getString(ERROR);
-        Log.e("netutil","erorr: " + error);
         if (error.equals("none")) {
             lyric = lyricJson.getString(LYRIC);
             return lyric;

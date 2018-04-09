@@ -133,14 +133,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             startActivity(intentDetal);
         }
         else
-        Log.e(TAG, "Error with lyric: " + lyric.getAllLyric());
+            Log.e(TAG, "Error with lyric: " + lyric.getAllLyric());
     }
 
     @Override
     public void onLoaderReset(Loader<List<Lyric>> loader) {
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
