@@ -28,6 +28,8 @@ public final class NetworkUtils {
     private static final String BASE_LYRICAPI_URL =
             "http://lyric-api.herokuapp.com/api/find";
 
+    private static final String BASE_TEST_URL =
+            "https://www.musixmatch.com/lyrics";
 
     /* The format we want our API to return */
     private static final String format = "json";
@@ -44,11 +46,31 @@ public final class NetworkUtils {
      *
      * @return The URL to use to query the server.
      */
-    public static URL buildUrlForSearchingLyric(String artistName, String musicName) {
+    public static URL buildUrlForLyricApi(String artistName, String musicName) {
 
         Uri builtUri = Uri.parse(BASE_LYRICAPI_URL).buildUpon()
                 .appendPath(artistName)
                 .appendPath(musicName)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
+    }
+
+
+    public static URL buildUrlForTest(Lyric lyric) {
+
+        Uri builtUri = Uri.parse(BASE_TEST_URL).buildUpon()
+                .appendPath(lyric.getArtist())
+                .appendPath(lyric.getName())
                 .build();
 
         URL url = null;
@@ -98,18 +120,11 @@ public final class NetworkUtils {
     public static String getLyricFromJson(Context context, String lyricJsonStr) throws JSONException {
 
         final String LYRIC = "lyric";
-        final String ERROR = "err";
 
         String lyric = "";
-        String error = "";
 
         JSONObject lyricJson = new JSONObject(lyricJsonStr);
-        error = lyricJson.getString(ERROR);
-        if (error.equals("none")) {
-            lyric = lyricJson.getString(LYRIC);
-            return lyric;
-        }
-        else
-            return error;
+        lyric = lyricJson.getString(LYRIC);
+        return lyric;
     }
 }

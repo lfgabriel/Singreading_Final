@@ -30,6 +30,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView lyricTextView;
 
     private DatabaseReference mDatabase;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,8 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         lyricTextView = (TextView) findViewById(R.id.tv_lyric);
-        lyric = getIntent().getParcelableExtra(MainActivity.LYRIC);
+        lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         lyricTextView.setText(lyric.getAllLyric());
         setTitle(lyric.getArtist() + " - " + lyric.getName());
@@ -58,19 +60,17 @@ public class DetailActivity extends AppCompatActivity {
 
     public void favorite(Lyric lyric) {
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        User user = new User();
-        user.setEmail(firebaseUser.getEmail());
-        user.setName(firebaseUser.getDisplayName());
-        user.setuID(firebaseUser.getUid());
-
         List<Lyric> userLyrics = new ArrayList<Lyric>();
         userLyrics.add(lyric);
-        user.setFavorites(userLyrics);
 
-        //String databaseUser = "lyric-" + user.getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("lyrics").child(user.getuID()).setValue(user.getFavorites());
+        mDatabase = FirebaseDatabase.getInstance().getReference("lyrics")
+                .child(firebaseUser.getUid());
+
+        String key = mDatabase.push().getKey();
+        mDatabase.child(key).setValue(lyric);
+
+        //mDatabase.child(firebaseUser.getUid()).setValue(userLyrics);
+
         Log.e(TAG, "Lyric saved");
     }
 
