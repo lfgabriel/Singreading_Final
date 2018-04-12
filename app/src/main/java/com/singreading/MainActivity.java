@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String TAG = "MainActivity";
 
     static final String EXTRA_LYRIC = "LYRIC";
-    static final String EXTRA_FIREBASE_USER_ID = "LYRIC";
 
     private EditText artistEditText;
     private EditText musicEditText;
@@ -95,10 +94,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 lyrics.clear();
-                for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
-                    Lyric lyric = lyricSnapshot.getValue(Lyric.class);
-                    Log.e(TAG, "Value is: " + lyric.getName());
-                    lyrics.add(lyric);
+
+                if (dataSnapshot.getValue() != null) {
+
+                    for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
+                        Lyric lyricFromFavorites = lyricSnapshot.getValue(Lyric.class);
+                        Log.e(TAG, "Value is: " + lyricFromFavorites.getName());
+                        //lyrics.add(lyric);
+                    }
+                }
+                else {
+                    Log.e(TAG, "Empty favorites: ");
                 }
             }
 
@@ -134,7 +140,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void searchLyric(View v) {
-        getSupportLoaderManager().initLoader(LYRICS_LOADER, null, this);
+
+        lyric = new Lyric();
+
+        String artist = artistEditText.getText().toString();
+        String name = musicEditText.getText().toString();
+
+        if (artist.equals("") || name.equals("")) {
+            Log.e(TAG, "Form input empty!");
+            Snackbar.make(v, "Both fields should be filled", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        else {
+            lyric.setArtist(artist);
+            lyric.setName(name);
+
+            getSupportLoaderManager().initLoader(LYRICS_LOADER, null, this);
+        }
     }
 
     @Override
@@ -159,11 +181,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public List<Lyric> loadInBackground() {
 
                 List<Lyric> lyrics = new ArrayList<Lyric>();
-                String artist = artistEditText.getText().toString();
-                String name = musicEditText.getText().toString();
-
-                lyric.setArtist(artist);
-                lyric.setName(name);
 
                 // TRY TO FETCH LYRIC-API
                 Log.e(TAG, "Fetching lyric-api...");
@@ -205,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Lyric>> loader) {
+        Log.e(TAG, "onLoaderReset");
 
     }
 
@@ -246,10 +264,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 Document doc = Jsoup.parse(response);
                 Elements content = doc.getElementsByClass("mxm-lyrics__content ");
-                Elements title = doc.getElementsByClass("mxm-track-title ");
+                Elements titles = doc.getElementsByClass("mxm-track-title__track ");
 
-                for (Element tit : title)
-                    Log.e(TAG, "MM title: " + tit.wholeText());
+                StringBuilder allTitles = new StringBuilder();
+                for (Element tit : titles)
+                    allTitles.append(tit.wholeText());
+
+                String title = allTitles.substring(6);
+                Log.e(TAG, "MM title: " + title);
+
+                if (!title.equals(lyric.getName())) {
+                    Log.e(TAG, "MM found another music! Should not display");
+                    lyric = null;
+                    return;
+                }
 
                 StringBuilder allLyric = new StringBuilder();
                 for (Element aux : content)
@@ -262,9 +290,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Log.e(TAG, "Not found on MM" );
                 lyric = null;
             }
-
-
-
         } catch (IOException e) {
             Log.e(TAG, "Error obtaining network response");
             e.printStackTrace();

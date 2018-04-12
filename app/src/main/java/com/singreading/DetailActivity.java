@@ -58,16 +58,18 @@ public class DetailActivity extends AppCompatActivity {
         favorite(lyric);
     }
 
-    public void favorite(Lyric lyric) {
+    public void favorite(Lyric lyric)
 
+    {
         List<Lyric> userLyrics = new ArrayList<Lyric>();
         userLyrics.add(lyric);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("lyrics")
                 .child(firebaseUser.getUid());
 
-        String key = mDatabase.push().getKey();
-        mDatabase.child(key).setValue(lyric);
+
+        //String key = mDatabase.push().getKey();
+        mDatabase.child(String.valueOf(lyric.getId())).setValue(lyric);
 
         //mDatabase.child(firebaseUser.getUid()).setValue(userLyrics);
 
