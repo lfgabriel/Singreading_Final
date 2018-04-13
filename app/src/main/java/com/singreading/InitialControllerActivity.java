@@ -18,7 +18,6 @@ public class InitialControllerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_initial_controller);
 
         mAuth = FirebaseAuth.getInstance();
-        Log.e("Controller", "Init");
 
         Intent nextActivity;
         FirebaseUser currentUser = mAuth.getCurrentUser();

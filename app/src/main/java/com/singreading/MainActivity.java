@@ -72,22 +72,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Database
         mDatabase = FirebaseDatabase.getInstance().getReference("lyrics")
                 .child(firebaseUser.getUid());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        Log.e(TAG, "ONSTART");
 
         final List<Lyric> lyrics = new ArrayList<Lyric>();
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,17 +129,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void searchLyric(View v) {
-
-        Log.e(TAG, "searchLyric method");
-
         lyric = new Lyric();
 
         String rawArtist = artistEditText.getText().toString();
         String artist = rawArtist.substring(0, 1).toUpperCase() + rawArtist.substring(1);
         String rawName = musicEditText.getText().toString();
         String name = rawName.substring(0, 1).toUpperCase() + rawName.substring(1);
-
-        Log.e(TAG, "find artist " + artist + " name " + name);
 
         if (artist.equals("") || name.equals("")) {
             Log.e(TAG, "Form input empty!");
@@ -220,11 +204,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (lyrics != null) {
 
-            Intent intentDetal = new Intent(MainActivity.this, DetailActivity.class);
-            intentDetal.putExtra(MainActivity.EXTRA_LYRIC, lyrics.get(0));
-            startActivity(intentDetal);
-        } else
+            Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
+            intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyrics.get(0));
+            startActivity(intentDetail);
+        } else {
             Log.e(TAG, "Should stay in MainActivity: ");
+        }
     }
 
     @Override

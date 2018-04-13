@@ -1,5 +1,6 @@
 package com.singreading;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +20,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.singreading.model.Lyric;
-import com.singreading.model.User;
 
 import org.w3c.dom.Text;
 
@@ -31,6 +32,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private Lyric lyric;
 
+    private ScrollView mDetailScrollView;
     private TextView lyricTextView;
     private TextView detailTitle;
     FloatingActionButton fab;
@@ -56,6 +58,8 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
+
+        mDetailScrollView = (ScrollView) findViewById(R.id.sv_detail_activity);
         detailTitle = (TextView) findViewById(R.id.tv_detail_title);
 
         //SET TEXT CAPITALIZED
@@ -68,6 +72,10 @@ public class DetailActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         lyricTextView.setText(lyric.getAllLyric());
+
+        Intent intent = new Intent(SingreadingAppWidget.ACTION_LYRIC_CHANGED);
+        intent.putExtra(MainActivity.EXTRA_LYRIC, lyric);
+        getApplicationContext().sendBroadcast(intent);
     }
 
     @Override
@@ -88,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                     for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
                         Lyric lyricFromFavorites = lyricSnapshot.getValue(Lyric.class);
                         if (lyricFromFavorites.getId().equals(lyric.getId())) {
-                            Log.e(TAG, lyric.getId() + "IS FAVORITE!! ");
+                            Log.e(TAG, lyric.getId() + " IS FAVORITE!! ");
                             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star_yellow));
                             isFavorite = true;
                             return;
@@ -119,6 +127,8 @@ public class DetailActivity extends AppCompatActivity {
 
         if (isFavorite) {
             mDatabase.child(String.valueOf(lyric.getId())).setValue(null);
+            Snackbar.make(view, "Removed from the favorite list!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star));
             isFavorite = false;
         }
@@ -130,6 +140,27 @@ public class DetailActivity extends AppCompatActivity {
 
             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star_yellow));
             isFavorite = true;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray("SCROLL_POSITION", new int[] {mDetailScrollView.getScrollX(), mDetailScrollView.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        final int[] scroll_positions = savedInstanceState.getIntArray("SCROLL_POSITION");
+
+        if (mDetailScrollView != null) {
+            mDetailScrollView .post(new Runnable() {
+                @Override
+                public void run() {
+                    mDetailScrollView .scrollTo(scroll_positions[0], scroll_positions[1]);
+                }
+            });
         }
     }
 

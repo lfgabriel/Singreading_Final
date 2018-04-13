@@ -8,6 +8,7 @@
     tools:showIn="@layout/activity_detail">
 
     <ScrollView
+        android:id="@+id/sv_detail_activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
