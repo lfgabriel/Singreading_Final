@@ -28,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     private Lyric lyric;
 
     private TextView lyricTextView;
+    private TextView detailTitle;
 
     private DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
@@ -38,27 +39,32 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                favorite(lyric, view);
             }
         });
 
-        lyricTextView = (TextView) findViewById(R.id.tv_lyric);
         lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
+        detailTitle = (TextView) findViewById(R.id.tv_detail_title);
+
+        //SET TEXT CAPITALIZED
+        detailTitle.setText(lyric.getArtist().substring(0, 1).toUpperCase() + lyric.getArtist().substring(1)
+                + " - " + lyric.getName().substring(0, 1).toUpperCase() + lyric.getName().substring(1));
+
+        lyricTextView = (TextView) findViewById(R.id.tv_lyric);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         lyricTextView.setText(lyric.getAllLyric());
-        setTitle(lyric.getArtist() + " - " + lyric.getName());
 
-        favorite(lyric);
+
     }
 
-    public void favorite(Lyric lyric)
+    public void favorite(Lyric lyric, View view)
 
     {
         List<Lyric> userLyrics = new ArrayList<Lyric>();
@@ -67,11 +73,10 @@ public class DetailActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference("lyrics")
                 .child(firebaseUser.getUid());
 
-
-        //String key = mDatabase.push().getKey();
         mDatabase.child(String.valueOf(lyric.getId())).setValue(lyric);
 
-        //mDatabase.child(firebaseUser.getUid()).setValue(userLyrics);
+        Snackbar.make(view, "Added to the favorites!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
 
         Log.e(TAG, "Lyric saved");
     }

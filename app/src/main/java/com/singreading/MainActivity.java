@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private EditText musicEditText;
 
     private URL lyricURL;
-    private Lyric lyric = new Lyric();
+    private Lyric lyric;
 
     private static final int LYRICS_LOADER = 332;
 
@@ -141,10 +141,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public void searchLyric(View v) {
 
+        Log.e(TAG, "searchLyric method");
+
         lyric = new Lyric();
 
-        String artist = artistEditText.getText().toString();
-        String name = musicEditText.getText().toString();
+        String rawArtist = artistEditText.getText().toString();
+        String artist = rawArtist.substring(0, 1).toUpperCase() + rawArtist.substring(1);
+        String rawName = musicEditText.getText().toString();
+        String name = rawName.substring(0, 1).toUpperCase() + rawName.substring(1);
+
+        Log.e(TAG, "find artist " + artist + " name " + name);
 
         if (artist.equals("") || name.equals("")) {
             Log.e(TAG, "Form input empty!");
@@ -155,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             lyric.setArtist(artist);
             lyric.setName(name);
 
-            getSupportLoaderManager().initLoader(LYRICS_LOADER, null, this);
+            getSupportLoaderManager().restartLoader(LYRICS_LOADER, null, this);
         }
     }
 
@@ -210,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Lyric>> loader, List<Lyric> lyrics) {
+        Log.e(TAG, "onLoadFinished");
 
         if (lyrics != null) {
 
