@@ -9,6 +9,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +40,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Lyric>> {
+public class MainActivity extends AppCompatActivity implements LyricsAdapter.LyricsAdapterOnClickHandler,
+        LoaderManager.LoaderCallbacks<List<Lyric>> {
 
     private static final String TAG = "MainActivity";
 
@@ -46,13 +49,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private EditText artistEditText;
     private EditText musicEditText;
+    private RecyclerView mRecyclerView;
+    LyricsAdapter mLyricsAdapter;
 
     private URL lyricURL;
+
     private Lyric lyric;
 
     private static final int LYRICS_LOADER = 332;
-
     private DatabaseReference mDatabase;
+
     FirebaseUser firebaseUser;
 
     @Override
@@ -65,6 +71,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Layout
         artistEditText = findViewById(R.id.editext_artist_name);
         musicEditText = findViewById(R.id.editext_music_name);
+        mRecyclerView = findViewById(R.id.rv_lyrics_main);
+
+        //Recycler view
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mLyricsAdapter = new LyricsAdapter(this, this);
+        mRecyclerView.setAdapter(mLyricsAdapter);
 
         //User
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -89,12 +103,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
                         Lyric lyricFromFavorites = lyricSnapshot.getValue(Lyric.class);
                         Log.e(TAG, "Value is: " + lyricFromFavorites.getName());
-                        //lyrics.add(lyric);
+                        lyrics.add(lyricFromFavorites);
                     }
                 }
                 else {
                     Log.e(TAG, "Empty favorites: ");
                 }
+
+                mLyricsAdapter.setLyricsData(lyrics);
             }
 
             @Override
@@ -103,28 +119,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Log.e(TAG, "Failed to read value.", databaseError.toException());
             }
         });
-
-
-        /*
-        // Read from the database
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Lyric value = dataSnapshot.getValue(Lyric.class);
-                Log.e(TAG, "Value is: " + value.getId());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.e(TAG, "Failed to read value.", error.toException());
-            }
-        }); */
-    }
-
-    public void getFavorites() {
 
     }
 
@@ -287,6 +281,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onClick(Lyric lyricDetails) {
+
+        Intent intentDetail = new Intent(this, DetailActivity.class);
+        intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyricDetails);
+        startActivity(intentDetail);
     }
 
     @Override
