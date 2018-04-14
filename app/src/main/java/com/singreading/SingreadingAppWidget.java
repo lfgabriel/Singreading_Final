@@ -25,15 +25,8 @@ public class SingreadingAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        Log.e(TAG, "updateAppWidget");
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.singreading_app_widget);
-
-
-        if (MainActivity.selectedLyric != null) {
-            CharSequence widgetText = selectedLyric.getAllLyric();
-            views.setTextViewText(R.id.appwidget_text, widgetText);
-        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -59,7 +52,6 @@ public class SingreadingAppWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e(TAG, "onReceive action: " + intent.getAction());
         super.onReceive(context, intent);
         if (intent.getAction().equals(ACTION_LYRIC_CHANGED)) {
             Lyric newLyric = intent.getParcelableExtra(MainActivity.EXTRA_LYRIC);

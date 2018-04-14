@@ -23,11 +23,9 @@ public class InitialControllerActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-            Log.e("Controller", "User: " + currentUser.getEmail() + ". Go to main");
             nextActivity = new Intent(this, MainActivity.class);
         }
         else {
-            Log.e("Controller", "Go to login");
             nextActivity = new Intent(this, LoginActivity.class);
         }
         startActivity(nextActivity);

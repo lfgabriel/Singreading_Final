@@ -79,7 +79,6 @@ public class LoginActivity extends BaseActivity implements
     // [END on_start_check_user]
 
     private void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
         }
@@ -91,16 +90,13 @@ public class LoginActivity extends BaseActivity implements
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.e(TAG, "onComplete called!");
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, getResources().getString(R.string.auth_failed),
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
@@ -114,7 +110,6 @@ public class LoginActivity extends BaseActivity implements
     }
 
     private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
         }
@@ -128,20 +123,18 @@ public class LoginActivity extends BaseActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                             Toast.makeText(LoginActivity.this, getResources().getString(R.string.auth_failed),
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
+                            mStatusTextView.setText(getResources().getString(R.string.auth_failed));
                         }
                         hideProgressDialog();
                         // [END_EXCLUDE]
@@ -172,12 +165,11 @@ public class LoginActivity extends BaseActivity implements
 
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this,
-                                    "Verification email sent to " + user.getEmail(),
+                                   getResources().getString(R.string.sent_email_verification) + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
                             Toast.makeText(LoginActivity.this,
-                                    "Failed to send verification email.",
+                                    getResources().getString(R.string.email_verification_send_fail),
                                     Toast.LENGTH_SHORT).show();
                         }
                         // [END_EXCLUDE]
@@ -191,7 +183,7 @@ public class LoginActivity extends BaseActivity implements
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mEmailField.setError(getResources().getString(R.string.required));
             valid = false;
         } else {
             mEmailField.setError(null);
@@ -199,7 +191,7 @@ public class LoginActivity extends BaseActivity implements
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            mPasswordField.setError(getResources().getString(R.string.required));
             valid = false;
         } else {
             mPasswordField.setError(null);

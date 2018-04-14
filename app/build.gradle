@@ -34,9 +34,13 @@ dependencies {
     // Firebase Storage
     implementation 'com.google.firebase:firebase-database:12.0.1'
 
+    // Google Admob
+    implementation 'com.google.firebase:firebase-ads:12.0.1'
+
     // Jsoup
     compile files('libs/jsoup-1.11.2.jar')
 }
+
 
 
 
