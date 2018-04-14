@@ -13,7 +13,7 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
 
-    <!-- Detail Activity -->2
+    <!-- Detail Activity -->
     <string name="favorited_lyric">Added to the favorites!</string>
     <string name="unfavorited_lyric">Removed from the favorite list!</string>
     <string name="snackbar_action">Action</string>
