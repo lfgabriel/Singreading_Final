@@ -10,6 +10,7 @@ import android.widget.RemoteViews;
 import com.singreading.model.Lyric;
 
 import static com.singreading.MainActivity.EXTRA_LYRIC;
+import static com.singreading.MainActivity.selectedLyric;
 
 /**
  * Implementation of App Widget functionality.
@@ -25,12 +26,14 @@ public class SingreadingAppWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         Log.e(TAG, "updateAppWidget");
-
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.singreading_app_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+
+
+        if (MainActivity.selectedLyric != null) {
+            CharSequence widgetText = selectedLyric.getAllLyric();
+            views.setTextViewText(R.id.appwidget_text, widgetText);
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

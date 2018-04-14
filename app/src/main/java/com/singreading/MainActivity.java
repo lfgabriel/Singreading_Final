@@ -47,21 +47,25 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
     private static final String TAG = "MainActivity";
 
+    private static final int LYRICS_LOADER = 332;
     static final String EXTRA_LYRIC = "LYRIC";
+    private static final int REQUEST_CODE = 400;
 
     private EditText artistEditText;
     private EditText musicEditText;
     private RecyclerView mRecyclerView;
+
     LyricsAdapter mLyricsAdapter;
 
     private URL lyricURL;
-
     private Lyric lyric;
 
-    private static final int LYRICS_LOADER = 332;
+    List<Lyric> lyrics;
     private DatabaseReference mDatabase;
+    private boolean mActivityDetailCalled = false;
 
     FirebaseUser firebaseUser;
+    public static Lyric selectedLyric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
         artistEditText = findViewById(R.id.editext_artist_name);
         musicEditText = findViewById(R.id.editext_music_name);
         mRecyclerView = findViewById(R.id.rv_lyrics_main);
+
+        lyrics = new ArrayList<Lyric>();
 
         //Recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -97,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
         Log.e(TAG, "onStart");
 
-        final List<Lyric> lyrics = new ArrayList<Lyric>();
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
             lyric.setArtist(artist);
             lyric.setName(name);
 
+            mActivityDetailCalled = false;
             getSupportLoaderManager().restartLoader(LYRICS_LOADER, null, this);
         }
     }
@@ -154,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     @Override
     public Loader<List<Lyric>> onCreateLoader(final int id, final Bundle args) {
         return new AsyncTaskLoader<List<Lyric>>(this) {
+
 
             @Override
             protected void onStartLoading() {
@@ -204,15 +211,23 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     public void onLoadFinished(Loader<List<Lyric>> loader, List<Lyric> lyrics) {
         Log.e(TAG, "onLoadFinished");
 
-        if (lyrics != null) {
+        if (!mActivityDetailCalled) {
 
-            Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
-            intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyrics.get(0));
-            startActivity(intentDetail);
-        } else {
-            Log.e(TAG, "Should stay in MainActivity: ");
+            if (lyrics != null) {
+
+                Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
+                intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyrics.get(0));
+                Log.e(TAG, "onLoadfinished Loader");
+                selectedLyric = lyrics.get(0);
+                mActivityDetailCalled = true;
+                startActivityForResult(intentDetail, REQUEST_CODE);
+            } else {
+                Log.e(TAG, "Should stay in MainActivity: ");
+            }
         }
+
     }
+
 
     @Override
     public void onLoaderReset(Loader<List<Lyric>> loader) {
@@ -300,9 +315,10 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
         }
         else {
+            selectedLyric = lyricDetails;
             Intent intentDetail = new Intent(this, DetailActivity.class);
             intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyricDetails);
-            startActivity(intentDetail);
+            startActivityForResult(intentDetail, REQUEST_CODE);
         }
 
     }

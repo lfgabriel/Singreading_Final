@@ -40,6 +40,7 @@ public class LyricsAdapter extends RecyclerView.Adapter<LyricsAdapter.LyricsAdap
 
         public final TextView mLyricsTextView;
 
+
         public LyricsAdapterViewHolder(View view) {
             super(view);
             mLyricsTextView = (TextView) view.findViewById(R.id.tv_lyric_artist_name);
