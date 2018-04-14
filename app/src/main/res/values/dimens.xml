@@ -2,6 +2,8 @@
 
     <!-- Main Activity -->
     <dimen name="cardview_margin">4dp</dimen>
+    <dimen name="lyric_info">17dp</dimen>
+
 
     <!-- Detail Activty -->
     <dimen name="lyric_text_size">21dp</dimen>

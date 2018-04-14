@@ -2,6 +2,8 @@
     <string name="app_name">Singreading</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Main Activity -->
+    <string name="empty_favorites_lyric">You have no favorites</string>
 
     <!-- Login -->
     <string name="auth_failed">Authentication failed</string>
@@ -21,6 +23,8 @@
     <string name="loading">Loading</string>
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="title_activity_detail">DetailActivity</string>
-    <string name="appwidget_text">EXAMPLE</string>
+
+    <!-- Widget -->
+    <string name="appwidget_text">Your lyric goes here</string>
     <string name="add_widget">Add widget</string>
 </resources>

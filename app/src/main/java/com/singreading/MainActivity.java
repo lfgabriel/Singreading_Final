@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     protected void onStart() {
         super.onStart();
 
+        Log.e(TAG, "onStart");
+
         final List<Lyric> lyrics = new ArrayList<Lyric>();
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -104,12 +107,15 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
                     for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
                         Lyric lyricFromFavorites = lyricSnapshot.getValue(Lyric.class);
-                        Log.e(TAG, "Value is: " + lyricFromFavorites.getName());
                         lyrics.add(lyricFromFavorites);
                     }
                 }
                 else {
                     Log.e(TAG, "Empty favorites: ");
+                    Lyric emptyLyric = new Lyric();
+                    emptyLyric.setArtist(getString(R.string.empty_favorites_lyric));
+                    emptyLyric.setName("");
+                    lyrics.add(emptyLyric);
                 }
 
                 mLyricsAdapter.setLyricsData(lyrics);
@@ -288,9 +294,17 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     @Override
     public void onClick(Lyric lyricDetails) {
 
-        Intent intentDetail = new Intent(this, DetailActivity.class);
-        intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyricDetails);
-        startActivity(intentDetail);
+        if (lyricDetails.getArtist().equals(getString(R.string.empty_favorites_lyric))) {
+            Toast.makeText(this, "Do you have a favorite music? =)",
+                    Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+            Intent intentDetail = new Intent(this, DetailActivity.class);
+            intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyricDetails);
+            startActivity(intentDetail);
+        }
+
     }
 
     @Override

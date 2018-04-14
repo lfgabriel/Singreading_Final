@@ -26,6 +26,7 @@ public class SingreadingAppWidget extends AppWidgetProvider {
 
         Log.e(TAG, "updateAppWidget");
 
+
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.singreading_app_widget);

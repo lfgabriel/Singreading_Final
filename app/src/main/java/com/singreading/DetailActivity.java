@@ -96,7 +96,6 @@ public class DetailActivity extends AppCompatActivity {
                     for (DataSnapshot lyricSnapshot : dataSnapshot.getChildren()) {
                         Lyric lyricFromFavorites = lyricSnapshot.getValue(Lyric.class);
                         if (lyricFromFavorites.getId().equals(lyric.getId())) {
-                            Log.e(TAG, lyric.getId() + " IS FAVORITE!! ");
                             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star_yellow));
                             isFavorite = true;
                             return;
@@ -164,4 +163,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Log.e(TAG, "onBackPressed");
+    }
 }
