@@ -4,9 +4,25 @@
 
     <!-- Main Activity -->
     <string name="empty_favorites_lyric">You have no favorites</string>
+    <string name="database_read_error">Failed to load database</string>
+    <string name="input_should_be_filled">Both fields should be filled</string>
+    <string name="lyric_not_found">It was not possible to find this song >(</string>
+    <string name="mm_lyric_content">mxm-lyrics__content </string>
+    <string name="mm_lyric_title">mxm-track-title__track </string>
+    <string name="no_favorite_to_open">Do you have a favorite music? =)</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+
+    <!-- Detail Activity -->2
+    <string name="favorited_lyric">Added to the favorites!</string>
+    <string name="unfavorited_lyric">Removed from the favorite list!</string>
+    <string name="snackbar_action">Action</string>
+    <string name="scroll_position">SCROLL_POSITION</string>
+    <string name="capitalized_title">%1$s - %2$s</string>
+
 
     <!-- Login -->
-    <string name="auth_failed">Authentication failed</string>
+    <string name="auth_failed">Authentication failed.</string>
     <string name="create_account">Create Account</string>
     <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
     <string name="emailpassword_title_text">Email and Password</string>
@@ -17,6 +33,10 @@
     <string name="sign_out">Sign Out</string>
     <string name="signed_out">Signed Out</string>
     <string name="verify_email">Verify Email</string>
+    <string name="required">Required.</string>
+    <string name="sent_email_verification">Verification email sent to </string>
+    <string name="email_verification_send_fail">Failed to send verification email.</string>
+
 
     <!-- General -->
     <string name="desc_firebase_lockup">Firebase logo and name</string>
@@ -27,4 +47,6 @@
     <!-- Widget -->
     <string name="appwidget_text">Your lyric goes here</string>
     <string name="add_widget">Add widget</string>
+    <string name="widget_without_lyric">Your last opened lyric will be shown here</string>
+
 </resources>

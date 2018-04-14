@@ -63,8 +63,10 @@ public class DetailActivity extends AppCompatActivity {
         detailTitle = (TextView) findViewById(R.id.tv_detail_title);
 
         //SET TEXT CAPITALIZED
-        detailTitle.setText(lyric.getArtist().substring(0, 1).toUpperCase() + lyric.getArtist().substring(1)
-                + " - " + lyric.getName().substring(0, 1).toUpperCase() + lyric.getName().substring(1));
+        String capitalizedArtist = lyric.getArtist().substring(0, 1).toUpperCase() + lyric.getArtist().substring(1);
+        String capitalizedName = lyric.getName().substring(0, 1).toUpperCase() + lyric.getName().substring(1);
+
+        detailTitle.setText(getResources().getString(R.string.capitalized_title, capitalizedArtist, capitalizedName));
 
         lyricTextView = (TextView) findViewById(R.id.tv_lyric);
 
@@ -126,16 +128,16 @@ public class DetailActivity extends AppCompatActivity {
 
         if (isFavorite) {
             mDatabase.child(String.valueOf(lyric.getId())).setValue(null);
-            Snackbar.make(view, "Removed from the favorite list!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, getResources().getString(R.string.unfavorited_lyric), Snackbar.LENGTH_LONG)
+                    .setAction(getResources().getString(R.string.snackbar_action), null).show();
             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star));
             isFavorite = false;
         }
         else {
             mDatabase.child(String.valueOf(lyric.getId())).setValue(lyric);
 
-            Snackbar.make(view, "Added to the favorites!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, getResources().getString(R.string.favorited_lyric), Snackbar.LENGTH_LONG)
+                    .setAction(getResources().getString(R.string.snackbar_action), null).show();
 
             fab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.favorite_star_yellow));
             isFavorite = true;
@@ -145,13 +147,13 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putIntArray("SCROLL_POSITION", new int[] {mDetailScrollView.getScrollX(), mDetailScrollView.getScrollY()});
+        outState.putIntArray(getResources().getString(R.string.scroll_position), new int[] {mDetailScrollView.getScrollX(), mDetailScrollView.getScrollY()});
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        final int[] scroll_positions = savedInstanceState.getIntArray("SCROLL_POSITION");
+        final int[] scroll_positions = savedInstanceState.getIntArray(getResources().getString(R.string.scroll_position));
 
         if (mDetailScrollView != null) {
             mDetailScrollView .post(new Runnable() {

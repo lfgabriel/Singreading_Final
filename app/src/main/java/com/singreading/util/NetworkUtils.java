@@ -31,15 +31,6 @@ public final class NetworkUtils {
     private static final String BASE_TEST_URL =
             "https://www.musixmatch.com/lyrics";
 
-    /* The format we want our API to return */
-    private static final String format = "json";
-
-    /* API key. You must set it here */
-    final static String APIKeyValue = "";
-
-    final static String SIZE_PARAM = "w";
-    final static String API_KEY = "api_key";
-
 
     /**
      * Builds the URL used to fetch lyric.
@@ -102,6 +93,7 @@ public final class NetworkUtils {
 
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
+                in.close();
                 return scanner.next();
             } else {
                 return null;
@@ -117,7 +109,7 @@ public final class NetworkUtils {
     }
 
 
-    public static String getLyricFromJson(Context context, String lyricJsonStr) throws JSONException {
+    public static String getLyricFromJson(String lyricJsonStr) throws JSONException {
 
         final String LYRIC = "lyric";
 

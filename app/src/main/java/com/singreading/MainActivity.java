@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     private EditText artistEditText;
     private EditText musicEditText;
     private RecyclerView mRecyclerView;
+    private AdView mAdView;
 
     LyricsAdapter mLyricsAdapter;
 
@@ -79,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
         musicEditText = findViewById(R.id.editext_music_name);
         mRecyclerView = findViewById(R.id.rv_lyrics_main);
 
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         lyrics = new ArrayList<Lyric>();
 
         //Recycler view
@@ -95,13 +102,13 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
         //Database
         mDatabase = FirebaseDatabase.getInstance().getReference("lyrics")
                 .child(firebaseUser.getUid());
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        Log.e(TAG, "onStart");
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -145,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
         if (artist.equals("") || name.equals("")) {
             Log.e(TAG, "Form input empty!");
-            Snackbar.make(v, "Both fields should be filled", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(v, getResources().getString(R.string.input_should_be_filled), Snackbar.LENGTH_LONG)
+                    .setAction(getResources().getString(R.string.snackbar_action), null).show();
         }
         else {
             lyric.setArtist(artist);
@@ -209,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
     @Override
     public void onLoadFinished(Loader<List<Lyric>> loader, List<Lyric> lyrics) {
-        Log.e(TAG, "onLoadFinished");
 
         if (!mActivityDetailCalled) {
 
@@ -217,13 +223,12 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
                 Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
                 intentDetail.putExtra(MainActivity.EXTRA_LYRIC, lyrics.get(0));
-                Log.e(TAG, "onLoadfinished Loader");
                 selectedLyric = lyrics.get(0);
                 mActivityDetailCalled = true;
                 startActivityForResult(intentDetail, REQUEST_CODE);
             } else {
-                Log.e(TAG, "Should stay in MainActivity: ");
-                Toast.makeText(this, "It was not possible to find this song >(",
+
+                Toast.makeText(this, getResources().getString(R.string.lyric_not_found),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -233,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
 
     @Override
     public void onLoaderReset(Loader<List<Lyric>> loader) {
-        Log.e(TAG, "onLoaderReset");
 
     }
 
@@ -243,14 +247,14 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
         try {
             String response = NetworkUtils.getResponseFromHttpUrl(lyricURL);
 
-            String lyricfromJson = NetworkUtils.getLyricFromJson(MainActivity.this, response);
+            String lyricfromJson = NetworkUtils.getLyricFromJson(response);
 
             if (lyricfromJson != null) {
                 lyric.setAllLyric(lyricfromJson);
                 lyric.generateId();
             } else {
                 lyric.setAllLyric(lyricfromJson);
-                Log.e(TAG, "Error. Not found lyric?");
+                Log.e(TAG, getResources().getString(R.string.lyric_not_found));
             }
 
         } catch (IOException e) {
@@ -274,18 +278,17 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
             if (response != null) {
 
                 Document doc = Jsoup.parse(response);
-                Elements content = doc.getElementsByClass("mxm-lyrics__content ");
-                Elements titles = doc.getElementsByClass("mxm-track-title__track ");
+                Elements content = doc.getElementsByClass(getResources().getString(R.string.mm_lyric_content));
+                Elements titles = doc.getElementsByClass(getResources().getString(R.string.mm_lyric_title));
 
                 StringBuilder allTitles = new StringBuilder();
                 for (Element tit : titles)
                     allTitles.append(tit.wholeText());
 
+                //Parse title
                 String title = allTitles.substring(6);
-                Log.e(TAG, "MM title: " + title);
 
                 if (!title.equals(lyric.getName())) {
-                    Log.e(TAG, "MM found another music! Should not display");
                     lyric = null;
                     return;
                 }
@@ -312,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     public void onClick(Lyric lyricDetails) {
 
         if (lyricDetails.getArtist().equals(getString(R.string.empty_favorites_lyric))) {
-            Toast.makeText(this, "Do you have a favorite music? =)",
+            Toast.makeText(this, getResources().getString(R.string.no_favorite_to_open),
                     Toast.LENGTH_SHORT).show();
 
         }
