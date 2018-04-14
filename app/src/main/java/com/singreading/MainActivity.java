@@ -223,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
                 startActivityForResult(intentDetail, REQUEST_CODE);
             } else {
                 Log.e(TAG, "Should stay in MainActivity: ");
+                Toast.makeText(this, "It was not possible to find this song >(",
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
