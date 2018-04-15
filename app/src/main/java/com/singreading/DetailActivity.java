@@ -1,5 +1,7 @@
 package com.singreading;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,8 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.singreading.model.Lyric;
-
-import org.w3c.dom.Text;
+import com.singreading.widget.SingreadingAppWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,11 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
+        MainActivity.selectedLyric = lyric;
+
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), SingreadingAppWidget.class));
+        SingreadingAppWidget myWidget = new SingreadingAppWidget();
+        myWidget.onUpdate(this, AppWidgetManager.getInstance(this),ids);
 
         mDetailScrollView = (ScrollView) findViewById(R.id.sv_detail_activity);
         detailTitle = (TextView) findViewById(R.id.tv_detail_title);

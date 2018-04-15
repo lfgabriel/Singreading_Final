@@ -11,6 +11,9 @@
     <string name="mm_lyric_title">mxm-track-title__track </string>
     <string name="no_favorite_to_open">Do you have a favorite music? =)</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="layout_textview_artist">Artist</string>
+    <string name="layout_textview_name">Song</string>
+    <string name="layout_button_search">Search</string>
 
 
     <!-- Detail Activity -->

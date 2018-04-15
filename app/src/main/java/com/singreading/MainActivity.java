@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
     private static final String TAG = "MainActivity";
 
     private static final int LYRICS_LOADER = 332;
-    static final String EXTRA_LYRIC = "LYRIC";
+    public static final String EXTRA_LYRIC = "LYRIC";
     private static final int REQUEST_CODE = 400;
 
     private EditText artistEditText;
@@ -146,16 +146,16 @@ public class MainActivity extends AppCompatActivity implements LyricsAdapter.Lyr
         lyric = new Lyric();
 
         String rawArtist = artistEditText.getText().toString();
-        String artist = rawArtist.substring(0, 1).toUpperCase() + rawArtist.substring(1);
         String rawName = musicEditText.getText().toString();
-        String name = rawName.substring(0, 1).toUpperCase() + rawName.substring(1);
 
-        if (artist.equals("") || name.equals("")) {
+        if (rawArtist.equals("") || rawName.equals("")) {
             Log.e(TAG, "Form input empty!");
-            Snackbar.make(v, getResources().getString(R.string.input_should_be_filled), Snackbar.LENGTH_LONG)
-                    .setAction(getResources().getString(R.string.snackbar_action), null).show();
+            Toast.makeText(this, getResources().getString(R.string.input_should_be_filled),
+                    Toast.LENGTH_SHORT).show();
         }
         else {
+            String artist = rawArtist.substring(0, 1).toUpperCase() + rawArtist.substring(1);
+            String name = rawName.substring(0, 1).toUpperCase() + rawName.substring(1);
             lyric.setArtist(artist);
             lyric.setName(name);
 

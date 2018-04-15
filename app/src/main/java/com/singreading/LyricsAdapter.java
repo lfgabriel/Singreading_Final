@@ -69,8 +69,9 @@ public class LyricsAdapter extends RecyclerView.Adapter<LyricsAdapter.LyricsAdap
 
     @Override
     public void onBindViewHolder(LyricsAdapterViewHolder lyricsAdapterViewHolder, int position) {;
-        lyricsAdapterViewHolder.mLyricsTextView.setText(mLyricData.get(position).getArtist()
-        + "\n" + mLyricData.get(position).getName());
+        String shownText = mLyricData.get(position).getArtist()
+                + "\n" + mLyricData.get(position).getName();
+        lyricsAdapterViewHolder.mLyricsTextView.setText(shownText);
     }
 
     @Override

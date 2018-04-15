@@ -8,5 +8,5 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="10000"
     android:widgetCategory="home_screen"
-    android:configure="com.singreading.SingreadingAppWidgetConfigure">
+    android:configure="com.singreading.widget.SingreadingAppWidgetConfigure">
 </appwidget-provider>

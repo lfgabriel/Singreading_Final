@@ -56,19 +56,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Artist" />
+            android:text="@string/layout_textview_artist" />
 
         <EditText
             android:id="@+id/editext_artist_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Song" />
+            android:text="@string/layout_textview_name" />
 
         <EditText
             android:id="@+id/editext_music_name"
@@ -80,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="searchLyric"
-            android:text="Search" />
+            android:text="@string/layout_button_search" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

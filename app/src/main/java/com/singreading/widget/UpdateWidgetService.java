@@ -1,30 +1,34 @@
-package com.singreading;
+package com.singreading.widget;
 
-import android.app.Activity;
+import android.app.IntentService;
+import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-/**
- * Created by gabriel on 14/04/18.
- */
+import com.singreading.MainActivity;
+import com.singreading.R;
 
-public class SingreadingAppWidgetConfigure extends Activity {
+import static android.app.Activity.RESULT_OK;
+
+public class UpdateWidgetService extends IntentService {
+
+    private static final String TAG = "AppWidget";
+
+    public static final String ACTION_UPDATE_WIDGET_LYRIC = "com.singreading.action.update_widget_lyric";
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    public UpdateWidgetService() { super("PlantWateringService");   }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setResult(RESULT_CANCELED);
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
 
@@ -32,10 +36,6 @@ public class SingreadingAppWidgetConfigure extends Activity {
             mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-
-
-        setContentView(R.layout.singreading_app_widget);
-        TextView textView = (TextView) findViewById(R.id.appwidget_text);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         RemoteViews views = new RemoteViews(getPackageName(),
@@ -50,12 +50,18 @@ public class SingreadingAppWidgetConfigure extends Activity {
 
         appWidgetManager.updateAppWidget(mAppWidgetId, views);
 
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        setResult(RESULT_OK, resultValue);
-        finish();
+        return super.onStartCommand(intent, flags, startId);
+    }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
-
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        if (intent != null)
+            Log.e("service", "action " + intent.getAction());
     }
 }

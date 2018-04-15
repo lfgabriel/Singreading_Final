@@ -3,9 +3,9 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'MySigningKey'
+            keyAlias 'MyAndroidKey'
             keyPassword 'signapk'
-            storeFile file('/home/gabriel/Documentos/Gabriel/Android-NanoDegree/keystore.jks')
+            storeFile file('keystore.jks')
             storePassword 'signapk'
         }
     }
@@ -24,6 +24,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
@@ -40,10 +43,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:12.0.1'
     // Firebase Storage
     implementation 'com.google.firebase:firebase-database:12.0.1'
-
     // Google Admob
     implementation 'com.google.firebase:firebase-ads:12.0.1'
-
     // Jsoup
     compile files('libs/jsoup-1.11.2.jar')
 }
