@@ -32,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG  = "DetailActivity";
 
     private Lyric lyric;
+    private String capitalizedArtist;
+    private String capitalizedName;
 
     private ScrollView mDetailScrollView;
     private TextView lyricTextView;
@@ -58,8 +60,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
-        MainActivity.selectedLyric = lyric;
+        lyric = MainActivity.selectedLyric;
 
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), SingreadingAppWidget.class));
         SingreadingAppWidget myWidget = new SingreadingAppWidget();
@@ -67,19 +68,27 @@ public class DetailActivity extends AppCompatActivity {
 
         mDetailScrollView = (ScrollView) findViewById(R.id.sv_detail_activity);
         detailTitle = (TextView) findViewById(R.id.tv_detail_title);
+        lyricTextView = (TextView) findViewById(R.id.tv_lyric);
 
         //SET TEXT CAPITALIZED
-        String capitalizedArtist = lyric.getArtist().substring(0, 1).toUpperCase() + lyric.getArtist().substring(1);
-        String capitalizedName = lyric.getName().substring(0, 1).toUpperCase() + lyric.getName().substring(1);
+        if (lyric != null) {
+            capitalizedArtist = lyric.getArtist().substring(0, 1).toUpperCase() + lyric.getArtist().substring(1);
+            capitalizedName = lyric.getName().substring(0, 1).toUpperCase() + lyric.getName().substring(1);
+        }
+        else {
+            lyric = new Lyric(Long.valueOf(0), "", "", "");
+            capitalizedArtist = "";
+            capitalizedName = "";
+            lyric.setAllLyric("");
+        }
 
         detailTitle.setText(getResources().getString(R.string.capitalized_title, capitalizedArtist, capitalizedName));
 
-        lyricTextView = (TextView) findViewById(R.id.tv_lyric);
+        lyricTextView.setText(lyric.getAllLyric());
 
         //GET USER AND DATABASE
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        lyricTextView.setText(lyric.getAllLyric());
 
         Intent intent = new Intent(SingreadingAppWidget.ACTION_LYRIC_CHANGED);
         intent.putExtra(MainActivity.EXTRA_LYRIC, lyric);
