@@ -58,8 +58,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        lyric = getIntent().getParcelableExtra(MainActivity.EXTRA_LYRIC);
-        MainActivity.selectedLyric = lyric;
+        lyric = MainActivity.selectedLyric;
 
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), SingreadingAppWidget.class));
         SingreadingAppWidget myWidget = new SingreadingAppWidget();
